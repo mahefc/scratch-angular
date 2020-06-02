@@ -14,6 +14,7 @@ button{
     cursor: pointer;
     &:disabled{
         cursor: auto;
+        color:#406f42 !important;
     }
 }
 

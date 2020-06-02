@@ -1,50 +1,69 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, ViewChild, ElementRef } from '@angular/core';
 
 @Component({
   selector: 'app-login1',
   templateUrl: './login1.component.html',
   styleUrls: ['./login1.component.scss']
 })
-export class Login1Component implements OnInit {
+export class Login1Component {
 
   constructor() { }
-  @ViewChild('email')private email;
-  @ViewChild('errMail')private errMail;
-  
-  @ViewChild('pwd')private pwd;
-  @ViewChild('errPwd')private errPwd;
 
-  ngOnInit() {
+  @ViewChild('email') email: ElementRef; @ViewChild('errMail') errMail: ElementRef;
+  @ViewChild('pwd') pwd: ElementRef; @ViewChild('errPwd') errPwd: ElementRef;
+  @ViewChild('btn') btn: ElementRef;
+
+  ngAfterViewInit() {
+    this.btn.nativeElement.disabled = true;
+    ['input', 'focusout'].forEach(evt => {
+      this.email.nativeElement.addEventListener(evt, (e) => {
+         this.btnCheck('mail',this.testMail(e))
+        })
+        this.pwd.nativeElement.addEventListener(evt, (e) => {
+          this.btnCheck('pwd',this.testPwd(e))
+      })
+    });
+
+    this.btn.nativeElement.addEventListener('click',()=>{
+      console.log('I am here')
+    })
+
   }
 
-  testMail(){
+  testMail(e){
     let regex = /\w+@[a-zA-Z]+?\.[a-zA-Z]{2,3}$/
-    this.errMail.nativeElement.style.borderColor = 'tomato'
-    if(this.email.nativeElement.value.length < 1){
-        this.errMail.nativeElement.innerHTML = 'Email is required'
+    return this.valueCheck(regex,e.target.value,this.errMail.nativeElement)
+  }
+
+  testPwd(e) {
+    let regex = /(?=.{6,})(?=.*[a-z])(?=.*\d)(?=.*[A-Z])(?=.*[@#$%^&+=]).*/
+    return this.valueCheck(regex,e.target.value,this.errPwd.nativeElement)
+  }
+  
+  valueCheck(regex,val,el){
+    el.style.borderColor = 'tomato'
+    if (val.length < 1) {
+      el.innerHTML = el.id === 'pwd' ? 'Password is required' : 'Email is required'
     }
-    else if(!regex.test(this.email.nativeElement.value)){
-      this.errMail.nativeElement.innerHTML = 'Email is not valid'
+    else if (!regex.test(val)) {
+      el.innerHTML =  el.id === 'pwd' ? 'Password is not valid' : 'Email is not valid'
     }
-    else{
-      this.errMail.nativeElement.innerHTML = '';
-      this.errMail.nativeElement.style.borderColor = 'green'
+    else {
+      el.innerHTML = '';
+      el.style.borderColor = 'green'
+    }
+    return el.style.borderColor == 'green' ? false : true
+  }
+
+  btnCheck(name,val){
+    let a,b = true;
+    name == 'mail' ?  a = val : b = val
+    if(!a && !b){
+      this.btn.nativeElement.disabled = false;
+    }else{
+      this.btn.nativeElement.disabled = true;
     }
   }
 
-  testPwd(){
-    let regex = /(?=.{6,})(?=.*[a-z])(?=.*\d)(?=.*[A-Z])(?=.*[@#$%^&+=]).*/
-    this.errPwd.nativeElement.style.borderColor = 'tomato'
-    if(this.pwd.nativeElement.value.length < 1){
-      this.errPwd.nativeElement.innerHTML = 'Password is required'
-    }
-    else if(!regex.test(this.pwd.nativeElement.value)){
-      this.errPwd.nativeElement.innerHTML = 'Password is not valid'
-    }
-    else{
-      this.errPwd.nativeElement.innerHTML = '';
-      this.errPwd.nativeElement.style.borderColor = 'green'
-    }
-  }
 
 }
