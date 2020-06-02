@@ -14,7 +14,9 @@ export class Login1Component {
   @ViewChild('btn') btn: ElementRef;
 
   ngAfterViewInit() {
+    
     this.btn.nativeElement.disabled = true;
+
     ['input', 'focusout'].forEach(evt => {
       this.email.nativeElement.addEventListener(evt, (e) => {
          this.btnCheck('mail',this.testMail(e))
