@@ -1,0 +1,13 @@
+  <!-- <button (click)="testChange('asd')">&#9662;</button> -->
+  <div class="main">
+    <form>
+      <h3>LOGIN </h3>
+      <input placeholder="Email" #email (input)="testMail()" (focusout)="testMail()">
+      <small #errMail></small>
+      <input placeholder="Password" #pwd (input)="testPwd()" (focusout)="testPwd()" type="password">
+      <small #errPwd></small>
+    
+      <button class="btn" #btn disabled=true>Login</button>
+    </form>
+  
+  </div>
